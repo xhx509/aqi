@@ -1,0 +1,33 @@
+FILE,DATA\2016\02\Logger_sn_1724-30_data_20160229_102850_2.csv
+VERSION,4.0
+LOGGER TYPE,AQUAlogger 530WTD 60bar max600m
+LOGGER,1724-30,1724-30_EK       
+REGIME TITLE, Mode, Interval, Samples Per Burst, Sample Rate, Samples Per Average
+REGIME, Continous Mode,90 seconds,1, 0.011111, 1, 
+Depth Trigger
+ - Start log session : Enable
+ - Start at a depth : 2.99 m - 26459 raw
+ - Stop log session : Enable
+ - Stop at a depth : 0.48 m - 26336 raw
+ - Stop event : Stop Session
+ - Wireless activation : Enable once stopped
+[LOGGER CHANNEL 0],Ext temperature
+COEFFS, 81.596954, -0.0038012147, 8.1910237e-08, -1.0914417e-12, 4.7008145e-18
+AVERAGED, No
+GAIN MODE, n/a
+[LOGGER CHANNEL 1],Battery voltage
+COEFFS, 0, 7.6295401e-05, 0, 0, 0
+AVERAGED, No
+GAIN MODE, n/a
+[LOGGER CHANNEL 2],Pressure       
+COEFFS, -52.397255, 0.0020210962, 3.3303379e-10, 0, 0
+AVERAGED, No
+GAIN MODE, n/a
+[LOGGER CHANNEL 4],Depth          
+COEFFS, 51.507366, 1.01325, 1, 0, 0
+AVERAGED, No
+GAIN MODE, n/a
+START TIME, 2/29/2016 10:26:00 AM
+STOP TIME, 2/29/2016 10:28:07 AM
+HEADING, Timecode,Ext temperature,,Battery voltage,,Pressure       ,,Depth          ,,
+UNITS, [MM/dd/yyyy HH:mm:ss] UTC-5,Raw, °C     ,Raw, V      ,Raw, bar    ,Raw, m      ,
