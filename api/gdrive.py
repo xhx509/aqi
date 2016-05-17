@@ -8,8 +8,9 @@ Created on Mon May  9 11:05:58 2016
 import glob
 from pydrive.auth import GoogleAuth
 from pydrive.drive import GoogleDrive
-
+from func_aq import plot_aq
 path='aqu_data/'
+pic_path='aqu_pic'
 files=sorted(glob.glob(path+'*.csv'))
 gpath=[]
 [gpath.append(i[24:26]) for i in files]
@@ -22,6 +23,10 @@ drive = GoogleDrive(gauth)
 
 #file1 = drive.CreateFile({'title': fname, "parents":  [{"kind": "drive#fileLink","id": id}]})
 for m in range(len(files)):
+    pic_name=plot_aq(files[m],pic_path) # plot graph
+    #print 'pic_name:====='+pic_name
+    if pic_name=='':
+        continue
     #for file_list in drive.ListFile({'q': 'trashed=true', 'maxResults': 10}):  
     #for file_list in drive.ListFile({'q': 'trashed=true', 'maxResults': 10}):
     file_list = drive.ListFile({'q': "trashed=false"}).GetList()
@@ -33,6 +38,14 @@ for m in range(len(files)):
     })
     file1.SetContentFile(files[m])
     file1.Upload()
+    if pic_name<>'few data':
+        
+        file2 = drive.CreateFile({'title': pic_name, 
+            "parents":  [{"id": id}], 
+        })
+        file2.SetContentFile(pic_name)
+        file2.Upload()    
+
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
@@ -40,7 +53,7 @@ from email.MIMEText import MIMEText
 
  
 fromaddr = "huanxin.data@gmail.com"
-toaddr = "james.manning@noaa.gov"
+toaddr = "xhx509@gmail.com"
  
 msg = MIMEMultipart()
  

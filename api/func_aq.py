@@ -13,7 +13,7 @@ import os
 import glob
 import pandas as pd
 
-def plot_aq(fn):
+def plot_aq(fn,path):
     dfname=read_csv(fn,sep=',',skiprows=2,nrows=1)
     df_id_name=dfname.ix[0][1].split('_')
     #fn='Logger_sn_1724-44_data_20160125_073552.csv'
@@ -29,7 +29,7 @@ def plot_aq(fn):
     sn=fn.split('_')[2]
     tit=df_id_name[1]+df_id_name[0]
     #tit=fn.split('_')[2]+'_'+fn.split('_')[4]+fn.split('_')[5][:-4]
-    path = '/home/hxu/github/ftp/aq_pic/'   # where you want to save the output files
+    #path = '/home/hxu/github/ftp/aq_pic/'   # where you want to save the output files
     ##################################
     ##################################
     fnoutdir=''
@@ -45,7 +45,9 @@ def plot_aq(fn):
         df=read_csv(fn,sep=',',skiprows=33,parse_dates={'datet':[1]},header=None,index_col='datet',date_parser=parse)#creat a new Datetimeindex
     except:
         print 'no data in '+fn
-        continue 
+        pic_name=''
+        return pic_name
+        #continue 
     
     
     df.index=df.index-pd.tseries.timedeltas.to_timedelta(4, unit='h')  #, chage it to UTC time
@@ -82,14 +84,16 @@ def plot_aq(fn):
             ax1.xaxis.set_major_locator(dates.MinuteLocator(interval=(max(df.index)-min(df.index)).seconds/60/6))# for minutely plot
     except:
         print fn+'  data is too few'
-        continue
+        pic_name='few data'
+        return pic_name
     ax1.xaxis.set_major_formatter(dates.DateFormatter('%D %H:%M'))
     ax1.set_xlabel('')
     try:
         ax1.set_xticklabels([])
     except:
         print fn+'  data is too few'
-        continue
+        pic_name='few data'
+        return pic_name
     ax1.grid()
     ax12=ax1.twinx()
     ax12.set_title(tit)
@@ -175,8 +179,10 @@ def plot_aq(fn):
     print fnout
     plt.savefig(fnout+'.png')
     plt.savefig(fnout+'.ps')
-    
+    pic_name= fnout+'.png'
+    return pic_name
     # get file ready for ORACLE
+    '''
     df['site']=fnout[1:3].upper()+fnout[3:5]
     df['salt']='99.999'
     df['sn']=sn[1:4]+sn[5] # needed to comply with ORACLE table constraints
@@ -184,4 +190,4 @@ def plot_aq(fn):
     output_fmt=['site','sn','ps','yd','temp','salt','depth',]
     dfout=df.reindex(columns=output_fmt)
     dfout.to_csv(fnoutdir+fnout+'.dat',float_format='%10.4f',header=False)
-
+    '''
