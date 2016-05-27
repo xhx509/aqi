@@ -5,6 +5,17 @@ Created on Mon Feb 29 13:16:01 2016
 @author: hxu
 """
 
+'''
+This program include 4 basic applications
+1, Download csv files which is oploaded by 'wifi.py' and stored in 'studentdrifters.org'
+2, Plot a graph for each downloaded csv file
+3, Organize and upload csv and graph files to google drive of 'huanxin.data@gmail.com'
+4, Send email to notice the people who need these data files
+
+###############################################
+NOTICE: The PATHS YOU HAVE TO CHANGE TO MAKE THEM CORRECT
+###############################################
+'''
 import ftplib
 import os
 import time
@@ -17,7 +28,7 @@ from func_aq import plot_aq
 ddir='/home/hxu/github/api/'
 path='aqu_data/'
 pic_path='aqu_pic/'
-temporary_f_path='aq_temporary/'
+temporary_f_path='aqtemporary/'
 os.chdir(ddir)
 #ftp = FTP('/huanxin')
 ftp=ftplib.FTP('216.9.9.126','huanxin','123321')
@@ -44,9 +55,10 @@ filenames_history=[i[9:] for i in filenames_history]
 files=list(set(filenames_new)-set(filenames_history))
 files=[(temporary_f_path+i) for i in files]
 
+#####################################################################
 gpath=[]
-[gpath.append(i[28:30]) for i in files]   # get the logger number here .."very important"
-
+[gpath.append(i.split('_')[2].split('-')[1]) for i in files]   # get the logger number here .."very important", you may need to change
+######################################################################
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
