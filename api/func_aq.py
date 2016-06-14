@@ -13,26 +13,31 @@ import os
 import glob
 import pandas as pd
 
-def plot_aq(fn,path):
+def plot_aq(fn,path,temporary_f_path):
     dfname=read_csv(fn,sep=',',skiprows=2,nrows=1)
-    df_id_name=dfname.ix[0][1].split('_')
+    try:
+        df_id_name=dfname.ix[0][1].split('_')
+        tit=df_id_name[1]+df_id_name[0]
+    except:
+        df_id_name=dfname.ix[0][1].split(' ')
+        if len(df_id_name)==1:
+            tit=df_id_name[0]
+        else:
+            
+            tit=df_id_name[1]+df_id_name[0]
     #fn='Logger_sn_1724-44_data_20160125_073552.csv'
     #fn=event.src_path # where I have deleted the "units" row and fixed date to make it easier
-    print fn
-    fnout=str(fn)[3:-4]
+    print 'this is fn : '+fn
+    fnout=str(fn)[len(temporary_f_path):-4]
     ######################################
-    '''
-    Modify input file below only if you need 
-    '''
     ####################################
     
-    sn=fn.split('_')[2]
-    tit=df_id_name[1]+df_id_name[0]
+    #sn=fn.split('_')[2]
     #tit=fn.split('_')[2]+'_'+fn.split('_')[4]+fn.split('_')[5][:-4]
     #path = '/home/hxu/github/ftp/aq_pic/'   # where you want to save the output files
     ##################################
     ##################################
-    fnoutdir=''
+    #fnoutdir=''
     
     def parse(datet):
         from datetime import datetime
@@ -121,20 +126,20 @@ def plot_aq(fn,path):
     for k in range(3):
         if len(time_len)<3:
             time_len='0'+time_len
-    print time_len
+    #print time_len
     meandepth=str(abs(int(round(np.mean(df['depth'].values),0))))
     #print df['depth']
     rangedepth=str(abs(int(round(max(df['depth'].values-min(df['depth'].values)),0))))
     for k in range(3):
         if len(rangedepth)<3:
             rangedepth='0'+rangedepth
-    print 'rangedepth'+rangedepth
+    #print 'rangedepth'+rangedepth
     
     for k in range(3):
         if len(meandepth)<3:
             meandepth='0'+meandepth
-    print meandepth        
-    print meantemp
+    #print meandepth        
+    #print meantemp
     
     ax1.text(0.95, 0.9, 'mean temperature='+str(round(np.mean(df['temp'].values*1.8+32),1))+'F',
             verticalalignment='top', horizontalalignment='right',
@@ -174,9 +179,9 @@ def plot_aq(fn,path):
     #ax2.xaxis.set_major_locator(dates.DayLocator(interval=4))
     #ax2.xaxis.set_major_formatter(dates.DateFormatter('%b %d'))
     
-    fnout=path+fnout[5:]
+    fnout=path+fnout
     #fnout = os.path.join(path, fnout[5:])
-    print fnout
+    #print fnout
     plt.savefig(fnout+'.png')
     plt.savefig(fnout+'.ps')
     pic_name= fnout+'.png'

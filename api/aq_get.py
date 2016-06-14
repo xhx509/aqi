@@ -80,8 +80,10 @@ for m in range(len(files)):
     file1 = drive.CreateFile({'title': files[m], 
         "parents":  [{"id": id}], 
     })
+    print 'this is : '+files[m]
     file1.SetContentFile(files[m])
     file1.Upload()
+    
     os.rename(files[m],ddir+path+files[m][len(temporary_f_path):])
     if pic_name<>'few data':
         
@@ -90,7 +92,7 @@ for m in range(len(files)):
         })
         file2.SetContentFile(pic_name)
         file2.Upload()    
-        os.rename(pic_name,ddir+path+files[m][len(temporary_f_path):])
+        os.rename(pic_name,ddir+path+files[m][len(temporary_f_path):-3]+'png')
 
 import smtplib
 from email.MIMEMultipart import MIMEMultipart
