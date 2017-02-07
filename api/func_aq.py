@@ -14,7 +14,13 @@ import glob
 import pandas as pd
 
 def plot_aq(fn,path,temporary_f_path):
-    dfname=read_csv(fn,sep=',',skiprows=2,nrows=1)
+    try:
+        dfname=read_csv(fn,sep=',',skiprows=2,nrows=1)
+    except:
+        print 'no data in '+fn
+        pic_name=''
+        return pic_name
+        
     try:
         df_id_name=dfname.ix[0][1].split('_')
         tit=df_id_name[1]+df_id_name[0]
@@ -184,6 +190,7 @@ def plot_aq(fn,path,temporary_f_path):
     #print fnout
     plt.savefig(fnout+'.png')
     plt.savefig(fnout+'.ps')
+    plt.close()
     pic_name= fnout+'.png'
     return pic_name
     # get file ready for ORACLE

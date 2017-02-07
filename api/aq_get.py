@@ -31,6 +31,7 @@ pic_path='aqu_pic/'
 temporary_f_path='aqtemporary/'
 os.chdir(ddir)
 #ftp = FTP('/huanxin')
+
 ftp=ftplib.FTP('216.9.9.126','huanxin','123321')
 print 'Logging in.'
 ftp.cwd('/huanxin')
@@ -38,14 +39,19 @@ print 'Accessing files'
 
 filenames_new = ftp.nlst() # get filenames within the directory
 print filenames_new
-
-for filename in filenames_new:
+'''
+filenames_history=sorted(glob.glob(path+'*.csv'))
+filenames_history=[i[9:] for i in filenames_history]
+files=list(set(filenames_new)-set(filenames_history))
+'''
+'''
+for filename in files:
     local_filename = os.path.join(ddir+temporary_f_path, filename)
     file = open(local_filename, 'wb')
     ftp.retrbinary('RETR '+ filename, file.write)
     #ftp.delete(filename)
     file.close()
-
+'''
 ftp.quit() # This is the “polite” way to close a connection
 
 #time.sleep(7200)
@@ -54,6 +60,7 @@ filenames_history=sorted(glob.glob(path+'*.csv'))
 filenames_history=[i[9:] for i in filenames_history]
 files=list(set(filenames_new)-set(filenames_history))
 files=[(temporary_f_path+i) for i in files]
+files=list(set(files))
 
 #####################################################################
 gpath=[]
@@ -63,7 +70,7 @@ gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
 drive = GoogleDrive(gauth)
 
-
+#files.remove('aqtemporary/Logger_sn_1724-11_data_20160818_110124.csv')
 
 #file1 = drive.CreateFile({'title': fname, "parents":  [{"kind": "drive#fileLink","id": id}]})
 for m in range(len(files)):
@@ -100,7 +107,7 @@ from email.MIMEText import MIMEText
 
  
 fromaddr = "huanxin.data@gmail.com"
-toaddr = "xhx509@gmail.com"
+toaddr = "huanxin.data@noaa.gov"
  
 msg = MIMEMultipart()
  
