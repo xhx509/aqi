@@ -39,29 +39,30 @@ print 'Accessing files'
 
 filenames_new = ftp.nlst() # get filenames within the directory
 print filenames_new
-'''
+
 filenames_history=sorted(glob.glob(path+'*.csv'))
 filenames_history=[i[9:] for i in filenames_history]
 files=list(set(filenames_new)-set(filenames_history))
-'''
-'''
+
+
 for filename in files:
     local_filename = os.path.join(ddir+temporary_f_path, filename)
     file = open(local_filename, 'wb')
     ftp.retrbinary('RETR '+ filename, file.write)
     #ftp.delete(filename)
     file.close()
-'''
+
 ftp.quit() # This is the “polite” way to close a connection
-
+files=[(temporary_f_path+i) for i in files]
+files=list(set(files))
 #time.sleep(7200)
-
+'''
 filenames_history=sorted(glob.glob(path+'*.csv'))
 filenames_history=[i[9:] for i in filenames_history]
 files=list(set(filenames_new)-set(filenames_history))
 files=[(temporary_f_path+i) for i in files]
 files=list(set(files))
-
+'''
 #####################################################################
 gpath=[]
 [gpath.append(i.split('_')[2].split('-')[1]) for i in files]   # get the logger number here .."very important", you may need to change
@@ -84,7 +85,7 @@ for m in range(len(files)):
     for file1 in file_list:
       if file1['title'] == gpath[m]:
           id = file1['id']
-    file1 = drive.CreateFile({'title': files[m], 
+    file1 = drive.CreateFile({'title': files[m].split('/')[1],       # for get the original name, without prefix
         "parents":  [{"id": id}], 
     })
     print 'this is : '+files[m]
@@ -94,7 +95,7 @@ for m in range(len(files)):
     os.rename(files[m],ddir+path+files[m][len(temporary_f_path):])
     if pic_name<>'few data':
         
-        file2 = drive.CreateFile({'title': pic_name, 
+        file2 = drive.CreateFile({'title': pic_name.split('/')[1], 
             "parents":  [{"id": id}], 
         })
         file2.SetContentFile(pic_name)
@@ -107,7 +108,7 @@ from email.MIMEText import MIMEText
 
  
 fromaddr = "huanxin.data@gmail.com"
-toaddr = "huanxin.data@noaa.gov"
+toaddr = "huanxin.data@gmail.com"
  
 msg = MIMEMultipart()
  
