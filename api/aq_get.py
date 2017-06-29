@@ -38,7 +38,7 @@ ftp.cwd('/huanxin')
 print 'Accessing files'
 
 filenames_new = ftp.nlst() # get filenames within the directory
-print filenames_new
+#print filenames_new
 
 filenames_history=sorted(glob.glob(path+'*.csv'))
 filenames_history=[i[9:] for i in filenames_history]
@@ -65,7 +65,7 @@ files=list(set(files))
 '''
 #####################################################################
 gpath=[]
-[gpath.append(i.split('_')[2].split('-')[1]) for i in files]   # get the logger number here .."very important", you may need to change
+[gpath.append(i.split('_')[2].split('-')[1]) for i in files]   # get the logger number here .."very important", you may need to change, or add logger number files in google drive
 ######################################################################
 gauth = GoogleAuth()
 gauth.LocalWebserverAuth()
@@ -74,6 +74,7 @@ drive = GoogleDrive(gauth)
 #files.remove('aqtemporary/Logger_sn_1724-11_data_20160818_110124.csv')
 
 #file1 = drive.CreateFile({'title': fname, "parents":  [{"kind": "drive#fileLink","id": id}]})
+count=0
 for m in range(len(files)):
     pic_name=plot_aq(files[m],pic_path,temporary_f_path) # plot graph
     #print 'pic_name:====='+pic_name
@@ -91,6 +92,7 @@ for m in range(len(files)):
     print 'this is : '+files[m]
     file1.SetContentFile(files[m])
     file1.Upload()
+    count=count+1
     
     os.rename(files[m],ddir+path+files[m][len(temporary_f_path):])
     if pic_name<>'few data':
@@ -108,7 +110,7 @@ from email.MIMEText import MIMEText
 
  
 fromaddr = "huanxin.data@gmail.com"
-toaddr = "huanxin.data@gmail.com"
+toaddr = "xhx509@gmail.com"
  
 msg = MIMEMultipart()
  
@@ -116,7 +118,7 @@ msg['From'] = fromaddr
 msg['To'] = toaddr
 msg['Subject'] ="Your aquetec csv data" #"SUBJECT OF THE EMAIL"
  
-body = "Please Click this link to get your aquetec data\n https://drive.google.com/open?id=0BwmSjxiv9rYLUlhhWS1sN01LTUk"
+body = str(count)+" raw data files were transmitted by WIFI, Please Click this link to get your aquetec data\n https://drive.google.com/open?id=0BwmSjxiv9rYLUlhhWS1sN01LTUk"
 
 msg.attach(MIMEText(body, 'plain'))
  
@@ -126,5 +128,23 @@ server.starttls()
 server.login(fromaddr, "likeicecream")  # your email address and password
 text = msg.as_string()
 server.sendmail(fromaddr, toaddr, text)
-server.quit()    
+server.quit() 
+import pandas as pd   
+codes_file='/home/hxu/github/api/codes_temp.dat'
+df_codes=pd.read_csv(codes_file,delim_whitespace=True,index_col=0,names = ["ap3", "depth", "boat_name", "aqu_num"])
+boat_name=[]
+for i in range(len(files)):
+    boat_name.append(df_codes[df_codes['aqu_num']==files[i].split('_')[2]]['boat_name'].tolist()[0])
+from collections import Counter
+boat_count=Counter(boat_name)
+
+
+
+
+
+
+
+
+
+
 

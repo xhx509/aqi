@@ -61,7 +61,7 @@ def plot_aq(fn,path,temporary_f_path):
         #continue 
     
     
-    df.index=df.index-pd.tseries.timedeltas.to_timedelta(4, unit='h')  #, chage it to UTC time
+    #df.index=df.index-pd.tseries.timedeltas.to_timedelta(4, unit='h')  #, chage it to UTC time
     df['yd']=df.index.dayofyear+df.index.hour/24.+df.index.minute/60./24.+df.index.second/60/60./24.-1.0 #creates a yrday0 field
     #output_fmt=['yd','Unnamed: 4','Unnamed: 10']
     #dfp=df.reindex(columns=output_fmt)# found I needed to generate a new dataframe to print in this order
@@ -69,14 +69,14 @@ def plot_aq(fn,path,temporary_f_path):
     
     #
     df['depth']=(df[9]) #get depth
-    df=df.ix[(df['depth']>0.90*mean(df['depth']))]  # get rid of shallow data
+    df=df.ix[(df['depth']>0.85*mean(df['depth']))]  # get rid of shallow data
     #df=df.ix[(df['depth']>mean(df['depth'])-3*std(df['depth'])) & (df['depth']<mean(df['depth'])+3*std(df['depth']))] # reduces time series to deep obs
     #df['temp']=(df['Unnamed: 3'])#*1.8)+32.0
     df['temp']=(df[3])#*1.8)+32.0
     df=df.ix[(df['temp']>mean(df['temp'])-3*std(df['temp'])) & (df['temp']<mean(df['temp'])+3*std(df['temp']))] # reduces time series to deep obs
     print len(df)
     
-    for o in list(reversed(range(len(df)))):
+    for o in list(reversed(range(len(df)))):                          # usually ,aquetec is collecting data every 1 minute, if the period between two collect above 30 minutes,we get rid of the previous one 
         if (df.index[o]-df.index[o-1])>=Timedelta('0 days 00:30:00') or o==0: 
             df=df.ix[o:]
             break
